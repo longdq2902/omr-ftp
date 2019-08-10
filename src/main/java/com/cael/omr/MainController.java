@@ -39,13 +39,9 @@ public class MainController {
             logger.info("Finish upload file");
 
         } catch (FTPErrors ftpErrors) {
-            //ftpService.disconnectFTP();
-            System.out.println(ftpErrors.getMessage());
             logger.error(ftpErrors.getMessage());
         }
         catch (IOException e) {
-            //ftpService.disconnectFTP();
-            System.out.println(e.getMessage());
             logger.error(e.getMessage());
         }
     }
