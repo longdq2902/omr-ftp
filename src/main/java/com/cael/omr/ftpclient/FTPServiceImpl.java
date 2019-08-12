@@ -82,15 +82,19 @@ public class FTPServiceImpl implements FTPService  {
      * @throws FTPErrors Set of possible errors associated with upload process.
      */
     @Override
-    public void uploadFileToFTP(File file, String ftpHostDir , String serverFilename) throws FTPErrors {
-
+    public void uploadFileToFTP(File file, String ftpHostDir , String serverFilename) throws FTPErrors,IOException {
+        InputStream input = null;
         try {
-            InputStream input = new FileInputStream(file);
+            input = new FileInputStream(file);
             this.ftpconnection.storeFile(ftpHostDir + serverFilename, input);
+            input.close();
         } catch (IOException e) {
             ErrorMessage errorMessage = new ErrorMessage(-5, "Could not upload file to server.");
             logger.error(errorMessage.toString());
+           if(input != null)   input.close();
             throw new FTPErrors(errorMessage);
+        } finally {
+            if(input != null)   input.close();
         }
 
     }

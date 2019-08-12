@@ -10,6 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -18,7 +19,7 @@ public class MyFileUtils {
     private final static Logger logger = LoggerFactory.getLogger(MyFileUtils.class);
 
 
-    public static List<String> walk( String path ) {
+    private  List<String> walk( String path ) {
 
         List<String> rets = new ArrayList<>();
 
@@ -40,22 +41,50 @@ public class MyFileUtils {
         return  rets;
     }
 
-    public static List<String> getAllFiles(String pathDir){
+    private static List<String> getAllFiles(String pathDir){
 
+        Stream<Path> walk = null;
         try {
-            Stream<Path> walk = Files.walk(Paths.get(pathDir));
+            walk = Files.walk(Paths.get(pathDir));
             List<String> result = walk.filter(Files::isRegularFile)
                     .map(x -> x.toString()).collect(Collectors.toList());
 
+            walk.close();
             return  result;
 
         } catch (IOException e) {
             logger.error(e.getMessage());
+            if(walk != null){
+                walk.close();
+            }
+
             return null;
+        }
+        finally {
+            if(walk != null){
+                walk.close();
+            }
         }
 
     }
+    public static List<String> getAllFilesByList(String pathDirs){
+        List<String> myPaths = new ArrayList<>();
+        List<String> rets = new ArrayList<>();
 
+        myPaths = Arrays.asList(pathDirs.split(","));
+        if(myPaths != null && myPaths.size()>0){
+
+            for (String p : myPaths) {
+                List<String> tmp = null;
+                tmp = getAllFiles(p);
+                if (tmp != null) {
+                    rets.addAll(tmp);
+                }
+            }
+        }
+        return  rets;
+
+    }
 
 
 }

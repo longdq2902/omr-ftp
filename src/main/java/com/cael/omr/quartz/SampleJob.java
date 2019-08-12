@@ -33,18 +33,19 @@ public class SampleJob implements Job {
 
         try {
             List<String> myFiles = new ArrayList<>();
-            myFiles= MyFileUtils.getAllFiles(appConfigurator.getSrcFolder());
+            myFiles= MyFileUtils.getAllFilesByList(appConfigurator.getSrcFolder());
 
             logger.info("Start upload file");
 
-            ftpService.connectToFTP("192.168.253.209", "cael", "cael@123");
-            logger.info("Login successfully");
+            ftpService.connectToFTP(appConfigurator.getHost(), appConfigurator.getUser(), appConfigurator.getPassword());
+            logger.info("Login successfully to FTP server ");
 
-            if(myFiles != null) {
+            if(myFiles != null && myFiles.size() >0) {
                 for (String path : myFiles) {
                     System.out.println(path);
                     File f = new File(path);
-                    ftpService.uploadFileToFTP(f, "/home/cael/ftp/upload/",f.getName());
+                    ftpService.uploadFileToFTP(f, appConfigurator.ftpHostDir,f.getName());
+
                 }
             }
 
@@ -53,8 +54,8 @@ public class SampleJob implements Job {
 
             if(myFiles != null) {
                 for (String path : myFiles) {
-                    logger.debug("Delete file : " + path);
                     Files.delete(Paths.get(path));
+                    logger.debug("Deleted file : " + path);
                 }
             }
 

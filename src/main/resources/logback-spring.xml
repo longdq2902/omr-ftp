@@ -54,14 +54,16 @@
 
     <!-- LOG everything at INFO level -->
     <root level="info">
-        <!--<appender-ref ref="RollingFile" />-->
         <appender-ref ref="Console"/>
-        <appender-ref ref="FullRollingFile"/>
     </root>
 
 
-    <logger name="com.cael" level="error">
+    <logger name="com.cael.omr" level="error">
         <appender-ref ref="ErrorRollingFile"/>
+    </logger>
+
+    <logger name="com.cael.omr" level="info">
+        <appender-ref ref="FullRollingFile"/>
     </logger>
 
 </configuration>
