@@ -67,6 +67,46 @@ Cho phép người dùng local truy cập đường dẫn nguồn của chính h
 		De ls được trong ftp client thì cần allow port 20 va sudo setsebool -P allow_ftpd_full_access 1
 
 
+- install influxdb
+	run command
+		cat <<EOF | sudo tee /etc/yum.repos.d/influxdb.repo
+		[influxdb]
+		name = InfluxDB Repository - RHEL \$releasever
+		baseurl = https://repos.influxdata.com/rhel/\$releasever/\$basearch/stable
+		enabled = 1
+		gpgcheck = 1
+		gpgkey = https://repos.influxdata.com/influxdb.key
+		EOF
+
+	sudo yum makecache fast
+	sudo yum -y install influxdb vim curl
+	sudo systemctl start influxdb && sudo systemctl enable influxdb
+	sudo vim /etc/influxdb/influxdb.conf
+		[http]
+		auth-enabled = true
+	curl -XPOST "http://localhost:8086/query" --data-urlencode "q=CREATE USER oms WITH PASSWORD 'oms@123' WITH ALL PRIVILEGES"
+	influx -username 'oms' -password 'oms@123'
+
+- Installing Grafana on CentOS 7
+	run command
+		cat <<EOF | sudo tee /etc/yum.repos.d/grafana.repo
+		[grafana]
+		name=grafana
+		baseurl=https://packages.grafana.com/oss/rpm
+		repo_gpgcheck=1
+		enabled=1
+		gpgcheck=1
+		gpgkey=https://packages.grafana.com/gpg.key
+		sslverify=1
+		sslcacert=/etc/pki/tls/certs/ca-bundle.crt
+		EOF
+
+	sudo yum -y install grafana
+	sudo systemctl start grafana-server
+	sudo systemctl enable grafana-server
+
+	http://34.87.8.171:3000/?orgId=1			u/p: admin/oms@123
+
 
 
 
