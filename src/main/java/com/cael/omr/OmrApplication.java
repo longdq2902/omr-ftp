@@ -14,12 +14,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 
 public class OmrApplication {
-    private final static Logger logger = LoggerFactory.getLogger(OmrApplication.class);
-
     public static void main(String[] args) {
-
         SpringApplication.run(OmrApplication.class, args);
-
     }
 
 

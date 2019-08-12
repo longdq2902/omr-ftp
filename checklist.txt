@@ -1,0 +1,73 @@
+IP: 34.87.8.171		u/P: root/oms@123
+
+- change pass: sudo passwd root
+
+- Config ssh: vi /etc/ssh/sshd_config
+	PermitRootLogin no thành PermitRootLogin yes
+	PasswordAuthentication no thành PasswordAuthentication yes
+
+
+
+
+Chính sách SELinux cho VSFTPD:
+
+Để share file một cách ẩn danh ta set biến public_content_t với đường dẫn public:
+~]# chcon -R -t public_content_t /path/to/directory
+Để tạo một đường dẫn để upload file một cách ẩn danh, ta cấu hình tương tự như trên và set tham số allow_ftpd_anon_write bằng lệnh sau:
+ ~]# setsebool -P allow_ftpd_anon_write=1
+Cho phép người dùng local truy cập đường dẫn nguồn của chính họ bằng lệnh sau:
+~]# setsebool -P ftp_home_dir=1
+	
+
+- install java 11
+	cd /opt/
+	rpm -Uvh jdk-11.0.4_linux-x64_bin.rpm 
+	alternatives --config java
+	java -version
+	export JAVA_HOME=/usr/java/jdk-11.0.4
+	export PATH=$PATH:/usr/java/jdk-11.0.4/bin/
+
+	export PATH="/usr/local/opt/inetutils/libexec/gnubin:$PATH"
+	reboot
+
+- install vsfptd: 
+	yum install vsftpd
+	systemctl [start] [stop] [status] vsftpd.service
+	systemctl enable vsftpd.service
+	systemctl restart vsftpd.service
+	vi /etc/vsftpd/vsftpd.conf
+		listen= YES
+		anonymous_enable=YES
+		local_enable=YES
+		write_enable=YES
+		anon_upload_enable=YES
+		anon_mkdir_write_enable=YES
+		#Chỉ chroot đối với một số user nằm trong danh sách được tạo trên đường dẫn /etc/vsftpd.chroot_list:
+		chroot_local_user=NO
+		chroot_list_enable=YES
+
+	Create user ftp: As discussed in the previous section the user will be able to upload its files to the ftp/upload directory.
+		sudo adduser ftpuser
+		sudo passwd ftpuser	(ftp@123)
+		echo "ftpuser" | sudo tee -a /etc/vsftpd/user_list
+		sudo mkdir -p /home/ftpuser/ftp/upload
+		sudo chmod 550 /home/ftpuser/ftp
+		sudo chmod 750 /home/ftpuser/ftp/upload
+		sudo chown -R ftpuser: /home/ftpuser/ftp
+
+		Disabling Shell Access
+			Run the following commands to create the /bin/ftponly shell and make it executable:
+				echo -e '#!/bin/sh\necho "This account is limited to FTP access only."' | sudo tee -a  /bin/ftponly
+				sudo chmod a+x /bin/ftponly
+			Append the new shell to the list of valid shells in the /etc/shells file:
+				echo "/bin/ftponly" | sudo tee -a /etc/shells
+			Change the user shell to /bin/ftponly:
+				sudo usermod ftpuser -s /bin/ftponly
+
+		De ls được trong ftp client thì cần allow port 20 va sudo setsebool -P allow_ftpd_full_access 1
+
+
+
+
+
+

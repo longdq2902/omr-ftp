@@ -1,8 +1,6 @@
 package com.cael.omr.utils;
 
-import org.apache.commons.io.FileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,8 +13,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@Slf4j
 public class MyFileUtils {
-    private final static Logger logger = LoggerFactory.getLogger(MyFileUtils.class);
 
 
     private  List<String> walk( String path ) {
@@ -53,7 +51,7 @@ public class MyFileUtils {
             return  result;
 
         } catch (IOException e) {
-            logger.error(e.getMessage());
+            log.error(e.getMessage());
             if(walk != null){
                 walk.close();
             }

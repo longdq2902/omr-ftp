@@ -1,24 +1,23 @@
 package com.cael.omr.ftpclient;
 
+import com.cael.omr.exception.ErrorMessage;
+import com.cael.omr.exception.FTPErrors;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.net.PrintCommandListener;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import com.cael.omr.exception.FTPErrors;
-import com.cael.omr.exception.ErrorMessage;
+
 import java.io.*;
 
 @Service
+@Slf4j
 public class FTPServiceImpl implements FTPService  {
     /**
      * FTP connection handler
      */
     FTPClient ftpconnection;
-
-    private Logger logger = LoggerFactory.getLogger(FTPServiceImpl.class);
 
     /**
      * Method that implement FTP connection.
@@ -38,7 +37,7 @@ public class FTPServiceImpl implements FTPService  {
             ftpconnection.connect(host);
         } catch (IOException e) {
             ErrorMessage errorMessage = new ErrorMessage(-1, "Could not connect to FTP through host =\n" + host);
-            logger.error(errorMessage.toString());
+            log.error(errorMessage.toString());
             throw new FTPErrors(errorMessage);
         }
 
@@ -50,7 +49,7 @@ public class FTPServiceImpl implements FTPService  {
                 ftpconnection.disconnect();
             } catch (IOException e) {
                 ErrorMessage errorMessage = new ErrorMessage(-2, "Could not connect to FTP, host = " + host + " entregó la respuesta=" + reply);
-                logger.error(errorMessage.toString());
+                log.error(errorMessage.toString());
                 throw new FTPErrors(errorMessage);
             }
         }
@@ -59,7 +58,7 @@ public class FTPServiceImpl implements FTPService  {
             ftpconnection.login(user, pass);
         } catch (IOException e) {
             ErrorMessage errorMessage = new ErrorMessage(-3, "El usuario=" + user + ", y el pass=**** no fueron válidos para la autenticación.");
-            logger.error(errorMessage.toString());
+            log.error(errorMessage.toString());
             throw new FTPErrors(errorMessage);
         }
 
@@ -67,7 +66,7 @@ public class FTPServiceImpl implements FTPService  {
             ftpconnection.setFileType(FTP.BINARY_FILE_TYPE);
         } catch (IOException e) {
             ErrorMessage errorMessage = new ErrorMessage(-4, "El tipo de dato para la transferencia no es válido.");
-            logger.error(errorMessage.toString());
+            log.error(errorMessage.toString());
             throw new FTPErrors(errorMessage);
         }
 
@@ -90,7 +89,7 @@ public class FTPServiceImpl implements FTPService  {
             input.close();
         } catch (IOException e) {
             ErrorMessage errorMessage = new ErrorMessage(-5, "Could not upload file to server.");
-            logger.error(errorMessage.toString());
+            log.error(errorMessage.toString());
            if(input != null)   input.close();
             throw new FTPErrors(errorMessage);
         } finally {
@@ -114,7 +113,7 @@ public class FTPServiceImpl implements FTPService  {
             fos = new FileOutputStream(copytoPath);
         } catch (FileNotFoundException e) {
             ErrorMessage errorMessage = new ErrorMessage(-6, "Could not get the reference to the relative folder to save, check the path and permissions.");
-            logger.error(errorMessage.toString());
+            log.error(errorMessage.toString());
             throw new FTPErrors(errorMessage);
         }
 
@@ -123,7 +122,7 @@ public class FTPServiceImpl implements FTPService  {
             fos.close();
         } catch (IOException e) {
             ErrorMessage errorMessage = new ErrorMessage(-7, "Could not download file.");
-            logger.error(errorMessage.toString());
+            log.error(errorMessage.toString());
             throw new FTPErrors(errorMessage);
         }
         finally {

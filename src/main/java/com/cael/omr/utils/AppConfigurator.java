@@ -10,7 +10,8 @@ import org.springframework.context.annotation.PropertySource;
 @Configuration
 @PropertySource("classpath:application.properties")
 @ConfigurationProperties
-@Getter @Setter
+@Getter
+@Setter
 
 public class AppConfigurator {
 
