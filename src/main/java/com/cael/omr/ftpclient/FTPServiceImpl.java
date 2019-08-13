@@ -2,11 +2,13 @@ package com.cael.omr.ftpclient;
 
 import com.cael.omr.exception.ErrorMessage;
 import com.cael.omr.exception.FTPErrors;
+import com.cael.omr.utils.AppConfigurator;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.net.PrintCommandListener;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -18,6 +20,9 @@ public class FTPServiceImpl implements FTPService  {
      * FTP connection handler
      */
     FTPClient ftpconnection;
+
+    @Autowired
+    AppConfigurator appConfigurator;
 
     /**
      * Method that implement FTP connection.
@@ -62,13 +67,13 @@ public class FTPServiceImpl implements FTPService  {
             throw new FTPErrors(errorMessage);
         }
 
-        try {
-            ftpconnection.setFileType(FTP.BINARY_FILE_TYPE);
-        } catch (IOException e) {
-            ErrorMessage errorMessage = new ErrorMessage(-4, "El tipo de dato para la transferencia no es válido.");
-            log.error(errorMessage.toString());
-            throw new FTPErrors(errorMessage);
-        }
+//        try {
+//            ftpconnection.setFileType(FTP.BINARY_FILE_TYPE);
+//        } catch (IOException e) {
+//            ErrorMessage errorMessage = new ErrorMessage(-4, "El tipo de dato para la transferencia no es válido.");
+//            log.error(errorMessage.toString());
+//            throw new FTPErrors(errorMessage);
+//        }
 
         ftpconnection.enterLocalPassiveMode();
     }
@@ -85,6 +90,11 @@ public class FTPServiceImpl implements FTPService  {
         InputStream input = null;
         try {
             input = new FileInputStream(file);
+
+            log.info("--------this.ftpconnection: " + this.ftpconnection.isConnected());
+            if(this.ftpconnection == null || !this.ftpconnection.isConnected()){
+                this.connectToFTP(appConfigurator.getHost(), appConfigurator.getUser(), appConfigurator.getPassword());
+            }
             this.ftpconnection.storeFile(ftpHostDir + serverFilename, input);
             input.close();
         } catch (IOException e) {
