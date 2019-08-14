@@ -1,16 +1,15 @@
 package com.cael.omr;
 
 import com.cael.omr.utils.AppConfigurator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.influxdb.InfluxDBProperties;
 
 
 @SpringBootApplication
-@EnableConfigurationProperties(AppConfigurator.class)
+@EnableConfigurationProperties({AppConfigurator.class, InfluxDBProperties.class})
 @Configuration
 
 public class OmrApplication {

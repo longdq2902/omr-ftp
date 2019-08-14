@@ -21,6 +21,8 @@ import org.springframework.scheduling.quartz.SimpleTriggerFactoryBean;
 
 @Configuration
 public class SchedulerConfig {
+
+
     @Bean
     public JobFactory jobFactory(ApplicationContext applicationContext) {
         SpringJobFactory jobFactory = new SpringJobFactory();
@@ -41,13 +43,13 @@ public class SchedulerConfig {
 
     @Bean
     public SimpleTriggerFactoryBean simpleJobTrigger(
-            @Qualifier("simpleJobDetail") JobDetail jobDetail,
+            @Qualifier("importInfluxDbJob") JobDetail jobDetail,
             @Value("${simplejob.frequency}") long frequency) {
         System.out.println("simpleJobTrigger");
 
         SimpleTriggerFactoryBean factoryBean = new SimpleTriggerFactoryBean();
         factoryBean.setJobDetail(jobDetail);
-        factoryBean.setStartDelay(0L);
+        factoryBean.setStartDelay(10000L);
         factoryBean.setRepeatInterval(frequency);
         factoryBean.setRepeatCount(SimpleTrigger.REPEAT_INDEFINITELY);
         return factoryBean;
@@ -62,10 +64,21 @@ public class SchedulerConfig {
         return propertiesFactoryBean.getObject();
     }
 
+//    @Bean
+//    public JobDetailFactoryBean simpleJobDetail() {
+//        JobDetailFactoryBean factoryBean = new JobDetailFactoryBean();
+//        factoryBean.setJobClass(SampleJob.class);
+//        factoryBean.setDurability(true);
+//        return factoryBean;
+//    }
+
+
+
+
     @Bean
-    public JobDetailFactoryBean simpleJobDetail() {
+    public JobDetailFactoryBean importInfluxDbJob() {
         JobDetailFactoryBean factoryBean = new JobDetailFactoryBean();
-        factoryBean.setJobClass(SampleJob.class);
+        factoryBean.setJobClass(ImportToInfluxDbJob.class);
         factoryBean.setDurability(true);
         return factoryBean;
     }

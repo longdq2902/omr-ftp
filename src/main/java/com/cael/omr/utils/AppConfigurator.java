@@ -23,7 +23,7 @@ public class AppConfigurator {
     public String host;
     public String user;
     public String password;
-
+    public String fileExtend;
 
 
     public AppConfigurator() {
