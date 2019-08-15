@@ -111,3 +111,46 @@ Cho phép người dùng local truy cập đường dẫn nguồn của chính h
 
 
 
+
+- Config application as service
+
+	I think you could try if your system supports systemd:
+
+	Create a service file with a name you consider is appropriate for you in the /etc/systemd/system/ directory:
+
+	sudo vi /etc/systemd/system/spring-boot.service
+
+	[Unit]
+	Description=Spring Boot Service
+	StartLimitIntervalSec=0
+	After=syslog.target
+
+	[Service]
+	Type=simple
+	Restart=always
+	RestartSec=4
+	User=root
+	ExecStart=/bin/bash -c "/usr/bin/java -jar spring.boot.jar --parameter01='My Parameter Value 01' --parameter02='My Parameter Value 02'"
+
+	[Install]
+	WantedBy=multi-user.target
+	Next you have to reload systemd:
+
+	sudo systemctl daemon-reload
+	Next you can start it:
+
+	sudo systemctl start spring-boot
+	Get status:
+
+	systemctl status spring-boot
+	Stop it:
+
+	sudo systemctl stop spring-boot
+	Or add it to autostart with system booting:
+
+	sudo systemctl enable spring-boot
+	To troubleshot you could run the next in parallel terminal window to see the realtime changes:
+
+	sudo tail -f /var/log/syslog
+
+

@@ -7,7 +7,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.influxdb.InfluxDBProperties;
 
-
 @SpringBootApplication
 @EnableConfigurationProperties({AppConfigurator.class, InfluxDBProperties.class})
 @Configuration
