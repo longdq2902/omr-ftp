@@ -19,11 +19,9 @@ public class AppConfigurator {
     public String srcFolder;
     public String desFolder;
     public String tempFolder;
-    public String ftpHostDir;
     public String host;
     public String user;
     public String password;
-    public String fileExtend;
 
 
     public AppConfigurator() {

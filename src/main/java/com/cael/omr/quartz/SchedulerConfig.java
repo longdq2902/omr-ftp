@@ -1,9 +1,5 @@
 package com.cael.omr.quartz;
 
-import java.io.IOException;
-import java.util.Properties;
-
-import com.cael.omr.OmrApplication;
 import org.quartz.JobDetail;
 import org.quartz.SimpleTrigger;
 import org.quartz.Trigger;
@@ -18,6 +14,9 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.scheduling.quartz.JobDetailFactoryBean;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.scheduling.quartz.SimpleTriggerFactoryBean;
+
+import java.io.IOException;
+import java.util.Properties;
 
 @Configuration
 public class SchedulerConfig {
@@ -37,19 +36,16 @@ public class SchedulerConfig {
         factory.setJobFactory(jobFactory);
         factory.setQuartzProperties(quartzProperties());
         factory.setTriggers(simpleJobTrigger);
-        System.out.println("starting jobs....");
         return factory;
     }
 
     @Bean
     public SimpleTriggerFactoryBean simpleJobTrigger(
-            @Qualifier("importInfluxDbJob") JobDetail jobDetail,
+            @Qualifier("scheduleJob") JobDetail jobDetail,
             @Value("${simplejob.frequency}") long frequency) {
-        System.out.println("simpleJobTrigger");
-
         SimpleTriggerFactoryBean factoryBean = new SimpleTriggerFactoryBean();
         factoryBean.setJobDetail(jobDetail);
-        factoryBean.setStartDelay(10000L);
+        factoryBean.setStartDelay(1000L);
         factoryBean.setRepeatInterval(frequency);
         factoryBean.setRepeatCount(SimpleTrigger.REPEAT_INDEFINITELY);
         return factoryBean;
@@ -64,21 +60,10 @@ public class SchedulerConfig {
         return propertiesFactoryBean.getObject();
     }
 
-//    @Bean
-//    public JobDetailFactoryBean simpleJobDetail() {
-//        JobDetailFactoryBean factoryBean = new JobDetailFactoryBean();
-//        factoryBean.setJobClass(SampleJob.class);
-//        factoryBean.setDurability(true);
-//        return factoryBean;
-//    }
-
-
-
-
     @Bean
-    public JobDetailFactoryBean importInfluxDbJob() {
+    public JobDetailFactoryBean scheduleJob() {
         JobDetailFactoryBean factoryBean = new JobDetailFactoryBean();
-        factoryBean.setJobClass(ImportToInfluxDbJob.class);
+        factoryBean.setJobClass(ScheduleJob.class);
         factoryBean.setDurability(true);
         return factoryBean;
     }

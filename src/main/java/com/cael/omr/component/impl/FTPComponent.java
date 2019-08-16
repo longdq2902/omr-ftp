@@ -1,41 +1,33 @@
-package com.cael.omr.quartz;
+package com.cael.omr.component.impl;
 
-import com.cael.omr.ftpclient.FTPService;
+import com.cael.omr.component.BaseComponent;
 import com.cael.omr.service.FTPClientService;
 import com.cael.omr.utils.AppConfigurator;
 import lombok.extern.slf4j.Slf4j;
-import org.quartz.Job;
-import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
+@Component
 @Slf4j
-public class SampleJob implements Job {
+public class FTPComponent implements BaseComponent {
 
     @Autowired
     AppConfigurator appConfigurator;
-    @Autowired
-    FTPService ftpService;
 
     @Autowired
     FTPClientService ftpClientService;
 
     @Override
-    public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
-
+    public void process() {
         try {
             ftpClientService.uploadFolderToRemoteServer(appConfigurator.getSrcFolder());
-
             log.info("Finish upload file");
-
         } catch (IOException e) {
             log.error(e.getMessage());
         } catch (Exception e) {
             log.error(e.getMessage());
         }
-
-
     }
 }

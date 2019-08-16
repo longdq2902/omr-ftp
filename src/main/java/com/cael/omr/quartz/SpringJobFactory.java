@@ -16,7 +16,6 @@ public final class SpringJobFactory extends SpringBeanJobFactory implements Appl
     @Override
     protected Object createJobInstance(final TriggerFiredBundle bundle) throws Exception {
         final Object job = super.createJobInstance(bundle);
-        System.out.println("create job instance");
         beanFactory.autowireBean(job);
         return job;
     }

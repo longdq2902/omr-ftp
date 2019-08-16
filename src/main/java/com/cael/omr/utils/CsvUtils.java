@@ -23,6 +23,14 @@ public class CsvUtils {
     private static final int MAX_LENGTH = 2000;
 
     private static final DateTimeFormatter customFormatter = DateTimeFormatter.ofPattern("MM/dd/yyHH:mm:ss");
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMddyyyy");
+
+    public static String BACKUP;
+
+    public static void setBackup(String backup) {
+        if (StringUtils.isBlank(BACKUP))
+            BACKUP = backup;
+    }
 
     private static void processData(InfluxDbService influxDbService, List<Device> listData) {
         influxDbService.insertPoints(listData);
@@ -102,10 +110,29 @@ public class CsvUtils {
             log.error("ERROR readUseCSVReader: ", e);
         } finally {
             if (numRecord > 1) {
-                deleteFile(csvFile);
+                backup(csvFile);
             }
             log.info("Time to readUseCSVReader " + numRecord + " record: " + (System.currentTimeMillis() - startTime) + " ms");
         }
+    }
+
+    private static boolean backup(String filePath) {
+        try {
+            log.info("------backup {} into {}", filePath, BACKUP);
+            if (StringUtils.isNotBlank(BACKUP)) {
+                String backupDaily = String.format("%s%s%s", BACKUP, File.separator, formatter.format(LocalDate.now()));
+                MyFileUtils.createFolderIfNotExit(backupDaily);
+                backupDaily += File.separator + MyFileUtils.getFileName(filePath);
+                log.info("------backupDaily {}", backupDaily);
+                MyFileUtils.copy(filePath, backupDaily);
+            }
+        } catch (Exception ex) {
+            log.error(String.format("ERROR backup {}", filePath), ex);
+            return false;
+        } finally {
+            deleteFile(filePath);
+        }
+        return true;
     }
 
     private static Device convertToDevice(long time, String deviceName, String value) {
@@ -224,13 +251,13 @@ public class CsvUtils {
     }
 
     //Format ngay ve dang MM/DD/YY
-    private static String formatDate(String input){
+    private static String formatDate(String input) {
         StringBuilder sb = new StringBuilder();
         sb.setLength(0);
 
         String[] tmp = input.split("/");
 
-        if(tmp.length >= 3){
+        if (tmp.length >= 3) {
             sb.append(StringUtils.leftPad(tmp[0], 2, "0"))
                     .append("/")
                     .append(StringUtils.leftPad(tmp[1], 2, "0"))
@@ -241,13 +268,13 @@ public class CsvUtils {
     }
 
     //Format time ve HH:mm:ss
-    private static String formatTime(String input){
+    private static String formatTime(String input) {
         StringBuilder sb = new StringBuilder();
         sb.setLength(0);
 
         String[] tmp = input.split(":");
 
-        if(tmp.length >= 3){
+        if (tmp.length >= 3) {
             sb.append(StringUtils.leftPad(tmp[0], 2, "0"))
                     .append(":")
                     .append(StringUtils.leftPad(tmp[1], 2, "0"))
