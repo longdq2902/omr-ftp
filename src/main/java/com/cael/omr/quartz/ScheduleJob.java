@@ -2,11 +2,13 @@ package com.cael.omr.quartz;
 
 import com.cael.omr.component.BaseComponent;
 import com.cael.omr.component.ComponentFactory;
+import com.cael.omr.service.ImportService;
 import com.cael.omr.utils.InetAddressUtil;
 import com.cael.omr.utils.MyFileUtils;
 import com.cael.omr.utils.PassTranformerUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -18,6 +20,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Slf4j
+@DisallowConcurrentExecution
 public class ScheduleJob implements Job {
 
     @Autowired
@@ -35,10 +38,16 @@ public class ScheduleJob implements Job {
     public static final String KEY_FOREVER = "For@Ever";
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
+
+    @Autowired
+    private ImportService service;
+
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
 
         log.debug("---type {}", type);
+
+
         BaseComponent component = componentFactory.getComponent(type);
 
         if (component == null) {
@@ -56,6 +65,8 @@ public class ScheduleJob implements Job {
             log.error("ERROR checkLicense: ", ex);
             return;
         }
+
+
     }
 
     private boolean checkLicense() throws Exception {

@@ -111,7 +111,7 @@ public class CsvUtils {
             log.error("ERROR readUseCSVReader: ", e);
         } finally {
             if (numRecord > 1) {
-                backup(csvFile);
+//                backup(csvFile);
             }
             log.info("Time to readUseCSVReader " + numRecord + " record: " + (System.currentTimeMillis() - startTime) + " ms");
         }

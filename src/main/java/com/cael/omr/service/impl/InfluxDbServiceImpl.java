@@ -42,7 +42,6 @@ public class InfluxDbServiceImpl implements InfluxDbService {
         if (listDevice == null || listDevice.isEmpty()) {
             return;
         }
-        log.info("-----------insertPoints: " + listDevice.size());
 //        influxDBTemplate.createDatabase();
         List<Point> listPoint = listDevice.stream().map(item -> {
             return Point.measurement(measurement)
