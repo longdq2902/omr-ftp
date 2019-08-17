@@ -13,9 +13,8 @@ public class Utils {
         if (StringUtils.isBlank(key)) {
             return defaultValue;
         }
-        String tmp = input.toLowerCase();
         String tmpKey = String.format("--%s", key);
-        if (StringUtils.startsWith(tmp, tmpKey)) {
+        if (StringUtils.startsWith(input, tmpKey)) {
             return input.substring(tmpKey.length() + 1).trim();
         }
         return defaultValue;

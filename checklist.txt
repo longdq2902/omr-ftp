@@ -154,3 +154,7 @@ Cho phép người dùng local truy cập đường dẫn nguồn của chính h
 	sudo tail -f /var/log/syslog
 
 
+
+- Run voi spec localtion: java -jar -Dspring.config.location=D:\Project\tmp\application.properties omr-1.0.0-SNAPSHOT.jar
+
+
