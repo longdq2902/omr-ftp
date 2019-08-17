@@ -6,6 +6,7 @@ import com.cael.omr.utils.PassTranformerUtil;
 import com.cael.omr.utils.Utils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
@@ -26,7 +27,7 @@ public class OmrApplication {
 
         genLicense(args);
 
-//        SpringApplication.run(OmrApplication.class, args);genLicense
+        SpringApplication.run(OmrApplication.class, args);
     }
 
     private static void genLicense(String... args) throws Exception {
