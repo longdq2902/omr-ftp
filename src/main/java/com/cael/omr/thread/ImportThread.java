@@ -32,7 +32,6 @@ public class ImportThread implements Runnable {
                 filePath = String.format("%s%s%s", ftpHostDir, File.separator, fileName);
                 CsvUtils.readUseCSVReader(filePath, influxDbService);
                 log.warn("--------done {} process {}", Thread.currentThread().getId(), fileName);
-                Thread.sleep(10000L);
             } catch (Exception ex) {
                 log.error(String.format("ERROR process {%s}: ", fileName), ex);
             }

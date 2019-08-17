@@ -38,21 +38,28 @@ public class ImportService {
     private InfluxDbService influxDbService;
 
     public void executeAsynchronously() throws InterruptedException {
-        log.info("--------executeAsynchronously------");
-
         File folder = new File(ftpHostDir);
         File[] listOfFiles = folder.listFiles();
 
         if (listOfFiles == null || listOfFiles.length <= 0)
             return;
 
-
-        boolean hasData = false;
+        //Init
+        CsvUtils.setBackup(backup);
         long startTime = System.currentTimeMillis();
         log.info("Begin import " + listOfFiles.length);
-        CsvUtils.setBackup(backup);
 
+        //Filter list
+        List<String> originalList = createOrigList(listOfFiles);
 
+        if (originalList.size() > 0) {
+            //Split into task
+            splitExecute(originalList);
+            log.info("Time to processReadFile: " + (System.currentTimeMillis() - startTime) + " ms");
+        }
+    }
+
+    private List<String> createOrigList(File[] listOfFiles) {
         List<String> originalList = new ArrayList<String>();
 
         String fileName;
@@ -62,7 +69,6 @@ public class ImportService {
                 log.info("File " + fileName);
                 if (StringUtils.endsWith(fileName.toLowerCase(), fileExtend)) {
                     try {
-                        hasData = true;
                         originalList.add(fileName);
                     } catch (Exception ex) {
                         log.error("ERROR Exception readUseCSVReader: ", ex);
@@ -72,8 +78,10 @@ public class ImportService {
                 log.warn("Directory " + fileName);
             }
         }
+        return originalList;
+    }
 
-
+    private void splitExecute(List<String> originalList) throws InterruptedException {
         int partitionSize = IntMath.divide(originalList.size(), numOfthreads, RoundingMode.UP);
 
         log.info("partitionSize: {}", partitionSize);
@@ -90,13 +98,6 @@ public class ImportService {
         }
 
         taskExecutor.invokeAll(todo);
-
-
-        if (hasData) {
-            log.info("Time to processReadFile: " + (System.currentTimeMillis() - startTime) + " ms");
-        }
-
-
     }
 
 }
