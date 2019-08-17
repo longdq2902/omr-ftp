@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +47,7 @@ public class CsvUtils {
             String date = "", time = "";
             int idx = 0, skipCol = 2;
             long timeData = 0;
-            LocalDate dDate;
+            LocalDateTime dDate;
             Timestamp timestamp;
 
             reader = new CSVReader(new FileReader(csvFile));
@@ -72,9 +73,9 @@ public class CsvUtils {
                     //Data
                     date = formatDate(line[0]);
                     time = formatTime(line[1]);
-                    dDate = LocalDate.parse(date + time, customFormatter);
+                    dDate = LocalDateTime.parse(date + time, customFormatter);
 
-                    timestamp = Timestamp.valueOf(dDate.atStartOfDay());
+                    timestamp = Timestamp.valueOf(dDate);
 
                     timeData = timestamp.getTime();
 
