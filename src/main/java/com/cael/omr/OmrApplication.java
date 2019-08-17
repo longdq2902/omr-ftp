@@ -24,8 +24,12 @@ public class OmrApplication {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     public static void main(String... args) throws Exception {
+        for (String arg : args) {
+            System.out.println(arg);
+        }
 
-        genLicense(args);
+//        System.out.println(PassTranformerUtil.encrypt(KEY_FOREVER));
+//        genLicense(args);
 
         SpringApplication.run(OmrApplication.class, args);
     }
@@ -40,6 +44,8 @@ public class OmrApplication {
             if (StringUtils.isBlank(macAddress)) {
                 macAddress = InetAddressUtil.getMacAddress();
             }
+
+            log.info("MacAddress: {}", macAddress);
 
             LocalDate start = LocalDate.now();
             LocalDate end = LocalDate.now();

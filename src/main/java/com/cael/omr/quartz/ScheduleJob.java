@@ -32,12 +32,13 @@ public class ScheduleJob implements Job {
     @Value("${app.keyFile:''}")
     private String keyFile;
 
-    private static final String KEY_FOREVER = "For@Ever";
+    public static final String KEY_FOREVER = "For@Ever";
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
 
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
+
+        log.debug("---type {}", type);
         BaseComponent component = componentFactory.getComponent(type);
 
         if (component == null) {
