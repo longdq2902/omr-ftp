@@ -23,7 +23,7 @@ public class FTPComponent implements BaseComponent {
     public void process() {
         try {
             ftpClientService.uploadFolderToRemoteServer(appConfigurator.getSrcFolder());
-            log.info("Finish upload file");
+            log.debug("Finish upload file");
         } catch (IOException e) {
             log.error(e.getMessage());
         } catch (Exception e) {

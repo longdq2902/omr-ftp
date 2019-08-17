@@ -28,10 +28,10 @@ public class ImportService {
     @Value("${import.fileExtend}")
     private String fileExtend;
 
-    @Value("${import.ftpHostDir}")
+    @Value("${import.ftpHostDir:#{null}}")
     private String ftpHostDir;
 
-    @Value("${import.backup}")
+    @Value("${import.backup:#{null}}")
     private String backup;
 
     @Autowired

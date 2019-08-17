@@ -12,7 +12,6 @@ public class ImportComponent implements BaseComponent {
     @Autowired
     private ImportService service;
 
-
     @Override
     public void process() {
         try {

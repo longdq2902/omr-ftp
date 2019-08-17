@@ -92,7 +92,7 @@ public class CsvUtils {
                                         listData.clear();
                                     }
                                 } catch (Exception ex) {
-                                    log.error("ERROR ProcessImportIfl getInstance: ", ex);
+                                    log.error(String.format("ERROR processData {}: ", StringUtils.join(line)), ex);
                                     listData.clear();
                                 }
                             }
@@ -111,7 +111,7 @@ public class CsvUtils {
             log.error("ERROR readUseCSVReader: ", e);
         } finally {
             if (numRecord > 1) {
-//                backup(csvFile);
+                backup(csvFile);
             }
             log.info("Time to readUseCSVReader " + numRecord + " record: " + (System.currentTimeMillis() - startTime) + " ms");
         }
@@ -119,12 +119,10 @@ public class CsvUtils {
 
     private static boolean backup(String filePath) {
         try {
-            log.info("------backup {} into {}", filePath, BACKUP);
             if (StringUtils.isNotBlank(BACKUP)) {
                 String backupDaily = String.format("%s%s%s", BACKUP, File.separator, formatter.format(LocalDate.now()));
                 MyFileUtils.createFolderIfNotExit(backupDaily);
                 backupDaily += File.separator + MyFileUtils.getFileName(filePath);
-                log.info("------backupDaily {}", backupDaily);
                 MyFileUtils.copy(filePath, backupDaily);
             }
         } catch (Exception ex) {

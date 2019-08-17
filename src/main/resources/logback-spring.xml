@@ -5,15 +5,14 @@
     <property name="LOGS_HOME" value="./logs"/>
     <include resource="org/springframework/boot/logging/logback/defaults.xml" />
 
-    <springProfile name="default">
+    <springProfile name="default,dev,ftp">
         <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
-
         <root level="INFO">
             <appender-ref ref="CONSOLE"/>
         </root>
     </springProfile>
 
-    <springProfile name="prod">
+    <springProfile name="prod,import">
         <include resource="logback_prod.xml"></include>
     </springProfile>
 
