@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <included>
-    <property name="LOGS_HOME" value="./logs"/>
+    <property name="LOGS_HOME" value="../logs"/>
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <layout class="ch.qos.logback.classic.PatternLayout">

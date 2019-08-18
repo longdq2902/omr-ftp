@@ -2,7 +2,6 @@ package com.cael.omr.quartz;
 
 import com.cael.omr.component.BaseComponent;
 import com.cael.omr.component.ComponentFactory;
-import com.cael.omr.service.ImportService;
 import com.cael.omr.utils.InetAddressUtil;
 import com.cael.omr.utils.MyFileUtils;
 import com.cael.omr.utils.PassTranformerUtil;
@@ -39,14 +38,9 @@ public class ScheduleJob implements Job {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
 
-    @Autowired
-    private ImportService service;
-
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
-
         log.debug("---type {}", type);
-
 
         BaseComponent component = componentFactory.getComponent(type);
 
@@ -65,8 +59,6 @@ public class ScheduleJob implements Job {
             log.error("ERROR checkLicense: ", ex);
             return;
         }
-
-
     }
 
     private boolean checkLicense() throws Exception {
