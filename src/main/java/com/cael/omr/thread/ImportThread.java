@@ -28,10 +28,10 @@ public class ImportThread implements Runnable {
         String filePath;
         for (String fileName : lis) {
             try {
-                log.info("{} process {}", Thread.currentThread().getId(), fileName);
+//                log.info("{} process {}", Thread.currentThread().getId(), fileName);
                 filePath = String.format("%s%s%s", ftpHostDir, File.separator, fileName);
                 CsvUtils.readUseCSVReader(filePath, influxDbService);
-                log.warn("--------done {} process {}", Thread.currentThread().getId(), fileName);
+//                log.warn("--------done {} process {}", Thread.currentThread().getId(), fileName);
             } catch (Exception ex) {
                 log.error(String.format("ERROR process {%s}: ", fileName), ex);
             }

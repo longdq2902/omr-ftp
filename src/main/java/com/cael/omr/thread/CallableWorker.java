@@ -28,16 +28,16 @@ public class CallableWorker implements Callable<String> {
     @Override
     public String call() throws Exception {
         process();
-        String message = String.format("CallableWorker name: %s is Done", fileName);
+//        String message = String.format("CallableWorker name: %s is Done", fileName);
         return fileName;
     }
 
     private void process() {
         try {
-            log.info("--- {} Begin process {} ", Thread.currentThread().getName(), fileName);
+//            log.info("--- {} Begin process {} ", Thread.currentThread().getName(), fileName);
             String filePath = String.format("%s%s%s", ftpHostDir, File.separator, fileName);
             CsvUtils.readUseCSVReader(filePath, influxDbService);
-            log.info("{} process done {}", Thread.currentThread().getName(), fileName);
+//            log.info("{} process done {}", Thread.currentThread().getName(), fileName);
         } catch (Exception ex) {
             log.error(String.format("ERROR process {%s}: ", fileName), ex);
         }

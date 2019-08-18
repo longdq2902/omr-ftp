@@ -33,7 +33,7 @@ public class ImportFutureService extends BaseImportService {
                 futureList.add(result);
             } catch (Exception ex) {
                 getInfoTask();
-                log.info("----Exception----");
+//                log.info("----Exception----");
                 i--;
             }
         }
@@ -42,9 +42,9 @@ public class ImportFutureService extends BaseImportService {
     }
 
     private void getInfoTask() {
-        log.warn("----taskExecutor: getMaxPoolSize: {} - getPoolSize: {} - getActiveCount: {} - getQueue: {}",
-                taskExecutor.getMaxPoolSize(), taskExecutor.getPoolSize(),
-                taskExecutor.getActiveCount(), taskExecutor.getThreadPoolExecutor().getQueue().size());
+//        log.debug("----taskExecutor: getMaxPoolSize: {} - getPoolSize: {} - getActiveCount: {} - getQueue: {}",
+//                taskExecutor.getMaxPoolSize(), taskExecutor.getPoolSize(),
+//                taskExecutor.getActiveCount(), taskExecutor.getThreadPoolExecutor().getQueue().size());
     }
 
     private void finishTask(List<Future<String>> futureList) {
@@ -72,6 +72,6 @@ public class ImportFutureService extends BaseImportService {
             } catch (Exception e) {
             }
         }
-        log.info("finishTask with {} - {}", futureList.size(), msg.toString());
+        log.info("finishTask with {}", futureList.size());
     }
 }

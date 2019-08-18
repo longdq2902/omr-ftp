@@ -113,7 +113,7 @@ public class CsvUtils {
             if (numRecord > 1) {
                 backup(csvFile);
             }
-            log.info("Time to readUseCSVReader " + numRecord + " record: " + (System.currentTimeMillis() - startTime) + " ms");
+//            log.info("Time to readUseCSVReader " + numRecord + " record: " + (System.currentTimeMillis() - startTime) + " ms");
         }
     }
 
