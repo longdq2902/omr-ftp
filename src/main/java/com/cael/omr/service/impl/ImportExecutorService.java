@@ -22,11 +22,6 @@ public class ImportExecutorService extends BaseImportService {
     private int numOfthreads;
 
     @Override
-    public void process() throws InterruptedException {
-        log.info("ImportExecutorService");
-    }
-
-    @Override
     public void execute(List<String> originalList) {
         int partitionSize = IntMath.divide(originalList.size(), numOfthreads, RoundingMode.UP);
 

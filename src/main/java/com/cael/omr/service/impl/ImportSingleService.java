@@ -14,10 +14,6 @@ import java.util.List;
 public class ImportSingleService extends BaseImportService {
 
     @Override
-    public void process() throws InterruptedException {
-        log.info("ImportSingleService");
-    }
-    @Override
     public void execute(List<String> originalList) {
         String filePath;
         for (String fileName : originalList) {

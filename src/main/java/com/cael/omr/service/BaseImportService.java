@@ -36,12 +36,12 @@ public abstract class BaseImportService {
 
         //Init
         CsvUtils.setBackup(backup);
-        log.info("Begin import " + listOfFiles.length);
 
         //Filter list
         List<String> originalList = createOrigList(listOfFiles);
 
         if (originalList.size() > 0) {
+            log.info("createOrigList with size {}", originalList.size());
             long startTime = System.currentTimeMillis();
             execute(originalList);
             //Split into task
@@ -56,7 +56,7 @@ public abstract class BaseImportService {
         for (int i = 0; i < listOfFiles.length; i++) {
             fileName = listOfFiles[i].getName();
             if (listOfFiles[i].isFile()) {
-                log.info("File " + fileName);
+                log.debug("File " + fileName);
                 if (StringUtils.endsWith(fileName.toLowerCase(), fileExtend)) {
                     try {
                         originalList.add(fileName);

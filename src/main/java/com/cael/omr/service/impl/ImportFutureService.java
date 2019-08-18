@@ -8,6 +8,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Future;
 
@@ -16,11 +17,6 @@ import java.util.concurrent.Future;
 public class ImportFutureService extends BaseImportService {
     @Autowired
     private ThreadPoolTaskExecutor taskExecutor;
-
-    @Override
-    public void process() throws InterruptedException {
-        log.info("ImportFutureService");
-    }
 
     @Override
     public void execute(List<String> originalList) {
@@ -54,12 +50,28 @@ public class ImportFutureService extends BaseImportService {
     private void finishTask(List<Future<String>> futureList) {
         StringBuilder msg = new StringBuilder();
         msg.setLength(0);
+
+        HashMap<String,Integer> hsm = new HashMap<>(futureList.size());
+
+        Integer count;
+        String fileName;
         for (Future<String> future : futureList) {
             try {
+                fileName = future.get();
+                count = hsm.get(fileName);
+
+                if(count == null){
+                    hsm.put(fileName,1);
+                }else{
+                    log.warn("Found duplicate file {} - {}",fileName,count);
+                    count++;
+                    hsm.put(fileName,count);
+                }
+
                 msg.append(future.get()).append("#####");
             } catch (Exception e) {
             }
         }
-        log.info("finishTask with {}", msg.toString());
+        log.info("finishTask with {} - {}", futureList.size(), msg.toString());
     }
 }
