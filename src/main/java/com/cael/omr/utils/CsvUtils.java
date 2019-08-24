@@ -15,6 +15,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
@@ -28,9 +29,17 @@ public class CsvUtils {
 
     public static String BACKUP;
 
+    public static String deviceSkip;
+
     public static void setBackup(String backup) {
         if (StringUtils.isBlank(BACKUP))
             BACKUP = backup;
+    }
+
+    public static void setDeviceSkip(String input) {
+        if (StringUtils.isBlank(deviceSkip)) {
+            deviceSkip = input;
+        }
     }
 
     private static void processData(InfluxDbService influxDbService, List<Device> listData) {
@@ -39,72 +48,17 @@ public class CsvUtils {
 
     //Bester
     public static void readUseCSVReader(String csvFile, InfluxDbService influxDbService) throws ParseException {
-        long startTime = System.currentTimeMillis();
         int numRecord = 0;
         CSVReader reader = null;
         try {
-            List<String> lstDevice = new ArrayList<>();
-            String date = "", time = "";
-            int idx = 0, skipCol = 2;
-            long timeData = 0;
-            LocalDateTime dDate;
-            Timestamp timestamp;
+            int skipCol = 2;
 
             reader = new CSVReader(new FileReader(csvFile));
-            String[] line;
 
-            List<Device> listData = new ArrayList<>();
-            while ((line = reader.readNext()) != null) {
-                if (line.length < skipCol) {
-                    log.warn("ERROR DATA FROM file: " + csvFile + " idx: " + numRecord + " data: " + StringUtils.join(line, ","));
-                    continue;
-                }
-                idx = 0;
-                if (numRecord == 0) {
-                    //Doc header
-                    for (String device : line) {
-                        idx++;
-                        if (idx > skipCol) {
-                            //Doc du lieu tbi
-                            lstDevice.add(device);
-                        }
-                    }
-                } else {
-                    //Data
-                    date = formatDate(line[0]);
-                    time = formatTime(line[1]);
-                    dDate = LocalDateTime.parse(date + time, customFormatter);
-
-                    timestamp = Timestamp.valueOf(dDate);
-
-                    timeData = timestamp.getTime();
-
-                    for (String value : line) {
-                        idx++;
-                        if (idx > skipCol) {
-                            if (!StringUtils.isBlank(value)) {
-                                try {
-                                    Device device = convertToDevice(timeData, lstDevice.get(idx - skipCol - 1), value);
-                                    listData.add(device);
-
-                                    if (listData.size() >= MAX_LENGTH) {
-                                        processData(influxDbService, listData);
-                                        listData.clear();
-                                    }
-                                } catch (Exception ex) {
-                                    log.error(String.format("ERROR processData {}: ", StringUtils.join(line)), ex);
-                                    listData.clear();
-                                }
-                            }
-                        }
-                    }
-                }
-                numRecord++;
-            }
-
-            if (listData.size() >= 0) {
-                processData(influxDbService, listData);
-                listData.clear();
+            if (StringUtils.isBlank(deviceSkip)) {
+                numRecord = readWithoutSkip(csvFile, reader, skipCol, influxDbService);
+            } else {
+                numRecord = readWithSkip(csvFile, reader, skipCol, influxDbService);
             }
 
         } catch (IOException e) {
@@ -113,8 +67,161 @@ public class CsvUtils {
             if (numRecord > 1) {
                 backup(csvFile);
             }
-//            log.info("Time to readUseCSVReader " + numRecord + " record: " + (System.currentTimeMillis() - startTime) + " ms");
         }
+    }
+
+    public static int readWithoutSkip(String csvFile, CSVReader reader, int skipCol, InfluxDbService influxDbService) throws ParseException, IOException {
+        int numRecord = 0, idx = 0;
+        List<String> lstDevice = new ArrayList<>();
+        String date = "", time = "";
+        long timeData = 0;
+        LocalDateTime dDate;
+        Timestamp timestamp;
+
+        String[] line;
+
+        List<Device> listData = new ArrayList<>();
+        while ((line = reader.readNext()) != null) {
+            if (line.length < skipCol) {
+                log.warn("ERROR DATA FROM file: " + csvFile + " idx: " + numRecord + " data: " + StringUtils.join(line, ","));
+                continue;
+            }
+            idx = 0;
+            if (numRecord == 0) {
+                //Doc header
+                if (StringUtils.isBlank(deviceSkip)) {
+                    for (String device : line) {
+                        idx++;
+                        if (idx > skipCol) {
+                            //Doc du lieu tbi
+                            lstDevice.add(device);
+                        }
+                    }
+                } else {
+                    List tmpSkip = Arrays.asList(deviceSkip.split(";"));
+                    for (String device : line) {
+                        idx++;
+                        if (idx > skipCol) {
+                            //Doc du lieu tbi
+                            if (!tmpSkip.contains(device))
+                                lstDevice.add(device);
+                        }
+                    }
+                }
+            } else {
+                //Data
+                date = formatDate(line[0]);
+                time = formatTime(line[1]);
+                dDate = LocalDateTime.parse(date + time, customFormatter);
+
+                timestamp = Timestamp.valueOf(dDate);
+
+                timeData = timestamp.getTime();
+
+                for (String value : line) {
+                    idx++;
+                    if (idx > skipCol) {
+                        if (!StringUtils.isBlank(value)) {
+                            try {
+                                Device device = convertToDevice(timeData, lstDevice.get(idx - skipCol - 1), value);
+                                listData.add(device);
+
+                                if (listData.size() >= MAX_LENGTH) {
+                                    processData(influxDbService, listData);
+                                    listData.clear();
+                                }
+                            } catch (Exception ex) {
+                                log.error(String.format("ERROR processData {}: ", StringUtils.join(line)), ex);
+                                listData.clear();
+                            }
+                        }
+                    }
+                }
+            }
+            numRecord++;
+        }
+
+        if (listData.size() >= 0) {
+            processData(influxDbService, listData);
+            listData.clear();
+        }
+        return numRecord;
+    }
+
+
+    public static int readWithSkip(String csvFile, CSVReader reader, int skipCol, InfluxDbService influxDbService) throws ParseException, IOException {
+        int numRecord = 0, idx = 0;
+        List<String> lstDevice = new ArrayList<>();
+        String date = "", time = "";
+        long timeData = 0;
+        LocalDateTime dDate;
+        Timestamp timestamp;
+
+        String[] line;
+
+        List<Device> listData = new ArrayList<>();
+
+        List<String> skipList = Arrays.asList(deviceSkip.split(";"));
+        String deviceName;
+        while ((line = reader.readNext()) != null) {
+            if (line.length < skipCol) {
+                log.warn("ERROR DATA FROM file: " + csvFile + " idx: " + numRecord + " data: " + StringUtils.join(line, ","));
+                continue;
+            }
+            idx = 0;
+            if (numRecord == 0) {
+                //Doc header
+                for (String device : line) {
+                    idx++;
+                    if (idx > skipCol) {
+                        //Doc du lieu tbi
+                        lstDevice.add(device);
+                    }
+                }
+            } else {
+                //Data
+                date = formatDate(line[0]);
+                time = formatTime(line[1]);
+                dDate = LocalDateTime.parse(date + time, customFormatter);
+
+                timestamp = Timestamp.valueOf(dDate);
+
+                timeData = timestamp.getTime();
+
+                for (String value : line) {
+                    idx++;
+                    if (idx > skipCol) {
+                        if (!StringUtils.isBlank(value)) {
+                            try {
+                                deviceName = lstDevice.get(idx - skipCol - 1);
+                                if (skipList.contains(deviceName)) {
+                                    continue;
+                                }
+
+                                Device device = convertToDevice(timeData, deviceName, value);
+                                listData.add(device);
+
+                                if (listData.size() >= MAX_LENGTH) {
+                                    processData(influxDbService, listData);
+                                    listData.clear();
+                                }
+                            } catch (Exception ex) {
+                                log.error(String.format("ERROR processData {}: ", StringUtils.join(line)), ex);
+                                listData.clear();
+                            }
+                        }
+                    }
+                }
+            }
+            numRecord++;
+        }
+
+        if (listData.size() >= 0) {
+            processData(influxDbService, listData);
+            listData.clear();
+        }
+
+        return numRecord;
     }
 
     private static boolean backup(String filePath) {
