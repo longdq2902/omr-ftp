@@ -12,7 +12,7 @@
         </root>
     </springProfile>
 
-    <springProfile name="prod,import">
+    <springProfile name="prod,import,mail">
         <include resource="logback_prod.xml"></include>
     </springProfile>
 

@@ -1,5 +1,6 @@
 package com.cael.omr;
 
+import com.cael.omr.service.EmailAttachmentReceiver;
 import com.cael.omr.utils.AppConfigurator;
 import com.cael.omr.utils.InetAddressUtil;
 import com.cael.omr.utils.PassTranformerUtil;
@@ -28,42 +29,7 @@ public class OmrApplication {
             System.out.println(arg);
         }
 
-//        System.out.println(PassTranformerUtil.encrypt(KEY_FOREVER));
-//        genLicense(args);
-
         SpringApplication.run(OmrApplication.class, args);
-    }
-
-    private static void genLicense(String... args) throws Exception {
-        String genLicense = Utils.getValueOfArgs("genLicense", "", args);
-        if ("true".equalsIgnoreCase(genLicense)) {
-            String macAddress = Utils.getValueOfArgs("clientMac", "", args);
-            String startDate = Utils.getValueOfArgs("startDate", "", args);
-            String endDate = Utils.getValueOfArgs("endDate", "", args);
-
-            if (StringUtils.isBlank(macAddress)) {
-                macAddress = InetAddressUtil.getMacAddress();
-            }
-
-            log.info("MacAddress: {}", macAddress);
-
-            LocalDate start = LocalDate.now();
-            LocalDate end = LocalDate.now();
-            start = start.minusDays(1);
-            if (StringUtils.isBlank(startDate)) {
-                startDate = start.format(formatter);
-            }
-
-            if (StringUtils.isBlank(endDate)) {
-                end = start.plusDays(32);
-                endDate = end.format(formatter);
-            }
-
-            String input = String.format("%s|%s|%s", macAddress, startDate, endDate);
-
-            String encrypt = PassTranformerUtil.encrypt(input);
-            log.info(encrypt);
-        }
     }
 
     private static void test() throws Exception {
