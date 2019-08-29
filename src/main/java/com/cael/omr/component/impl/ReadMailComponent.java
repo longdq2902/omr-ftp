@@ -1,6 +1,5 @@
 package com.cael.omr.component.impl;
 
-import com.cael.omr.component.BaseComponent;
 import com.cael.omr.service.EmailAttachmentReceiver;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,7 @@ import java.util.Properties;
 
 @Component
 @Slf4j
-public class ReadMailComponent implements BaseComponent {
+public class ReadMailComponent {
 
     @Autowired
     EmailAttachmentReceiver emailAttachmentReceiver;
@@ -50,7 +49,6 @@ public class ReadMailComponent implements BaseComponent {
     @Value("${mail.properties.socketFactoryPort}")
     private String propertiesSocketPort;
 
-    @Override
     public void process() {
         try {
             Properties properties = new Properties();
