@@ -27,7 +27,7 @@
 
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- rollover daily -->
-            <fileNamePattern>${LOGS_HOME}/full.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <fileNamePattern>${LOGS_HOME}/full.log.%d{yyyy-MM-dd}.%i</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>10MB</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
@@ -48,7 +48,7 @@
 
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- rollover daily -->
-            <fileNamePattern>${LOGS_HOME}/error.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <fileNamePattern>${LOGS_HOME}/error.log.%d{yyyy-MM-dd}.%i</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>10MB</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>

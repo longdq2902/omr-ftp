@@ -1,19 +1,13 @@
 package com.cael.omr.config;
 
-import com.cael.omr.exception.AsyncExceptionHandler;
-import com.cael.omr.exception.RejectedExecutionHandlerImpl;
-import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.task.TaskExecutor;
-import org.springframework.scheduling.annotation.AsyncConfigurer;
-import org.springframework.scheduling.concurrent.ConcurrentTaskExecutor;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
-import java.util.concurrent.Executors;
-
 @Configuration
+@Getter
 public class ThreadConfig {
 
     @Value("${thread.corePoolSize}")
@@ -24,6 +18,9 @@ public class ThreadConfig {
 
     @Value("${thread.queueCapacity}")
     private int queueCapacity;
+
+    @Value("${debug:''}")
+    private String debug;
 
     @Bean
     public ThreadPoolTaskExecutor taskExecutor() {

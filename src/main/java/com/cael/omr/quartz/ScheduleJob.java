@@ -2,6 +2,8 @@ package com.cael.omr.quartz;
 
 import com.cael.omr.component.BaseComponent;
 import com.cael.omr.component.ComponentFactory;
+import com.cael.omr.config.ThreadConfig;
+import com.cael.omr.utils.CsvUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
@@ -20,8 +22,17 @@ public class ScheduleJob extends BaseJob implements Job {
     @Value("${job.type}")
     private String type;
 
+    @Autowired
+    private ThreadConfig config;
+
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
+
+        if("true".equalsIgnoreCase(config.getDebug())) {
+            CsvUtils.setDebug("true");
+            log.info("---ScheduleJob----");
+        }
+
         BaseComponent component = componentFactory.getComponent(type);
 
         if (component == null) {

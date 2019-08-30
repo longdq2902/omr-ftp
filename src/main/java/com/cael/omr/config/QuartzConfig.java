@@ -59,7 +59,7 @@ public class QuartzConfig {
         factoryBean.setRepeatInterval(pollFrequencyMs);
         factoryBean.setName(triggerName);
         factoryBean.setRepeatCount(SimpleTrigger.REPEAT_INDEFINITELY);
-        factoryBean.setMisfireInstruction(SimpleTrigger.MISFIRE_INSTRUCTION_RESCHEDULE_NEXT_WITH_REMAINING_COUNT);
+//        factoryBean.setMisfireInstruction(SimpleTrigger.MISFIRE_INSTRUCTION_RESCHEDULE_NEXT_WITH_REMAINING_COUNT);
         return factoryBean;
     }
 

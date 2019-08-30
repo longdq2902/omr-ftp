@@ -31,6 +31,14 @@ public class CsvUtils {
 
     public static String deviceSkip;
 
+    public static String debug = "";
+
+    public static void setDebug(String backup) {
+        if (StringUtils.isBlank(debug))
+            debug = backup;
+    }
+
+
     public static void setBackup(String backup) {
         if (StringUtils.isBlank(BACKUP))
             BACKUP = backup;
@@ -64,7 +72,9 @@ public class CsvUtils {
         } catch (IOException e) {
             log.error("ERROR readUseCSVReader: ", e);
         } finally {
-            if (numRecord > 1) {
+            if (numRecord <= 0) {
+                backupError(csvFile);
+            } else {
                 backup(csvFile);
             }
         }
@@ -84,7 +94,7 @@ public class CsvUtils {
         while ((line = reader.readNext()) != null) {
             if (line.length < skipCol) {
                 log.warn("ERROR DATA FROM file: " + csvFile + " idx: " + numRecord + " data: " + StringUtils.join(line, ","));
-                continue;
+                return -1;
             }
             idx = 0;
             if (numRecord == 0) {
@@ -224,7 +234,32 @@ public class CsvUtils {
         return numRecord;
     }
 
+    private static boolean backupError(String filePath) {
+        if ("true".equalsIgnoreCase(debug)) {
+            log.info("-----backupError {}", filePath);
+        }
+
+        try {
+            if (StringUtils.isNotBlank(BACKUP)) {
+                String backupDaily = String.format("%s_error%s%s", BACKUP, File.separator, formatter.format(LocalDate.now()));
+                MyFileUtils.createFolderIfNotExit(backupDaily);
+                backupDaily += File.separator + MyFileUtils.getFileName(filePath);
+                MyFileUtils.copy(filePath, backupDaily);
+            }
+        } catch (Exception ex) {
+            log.error(String.format("ERROR backup {}", filePath), ex);
+            return false;
+        } finally {
+            deleteFile(filePath);
+        }
+        return true;
+    }
+
     private static boolean backup(String filePath) {
+        if ("true".equalsIgnoreCase(debug)) {
+            log.info("-----backup {}", filePath);
+        }
+
         try {
             if (StringUtils.isNotBlank(BACKUP)) {
                 String backupDaily = String.format("%s%s%s", BACKUP, File.separator, formatter.format(LocalDate.now()));
