@@ -157,4 +157,7 @@ Cho phép người dùng local truy cập đường dẫn nguồn của chính h
 
 - Run voi spec localtion: java -jar -Dspring.config.location=D:\Project\tmp\application.properties omr-1.0.0-SNAPSHOT.jar
 
-
+- influxdb:
+	CREATE DATABASE oms WITH DURATION 31d;
+	Hoặc: CREATE RETENTION POLICY "months" ON "oms" DURATION 31d REPLICATION 1 DEFAULT;
+	
