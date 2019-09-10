@@ -1,0 +1,214 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 2,
+  "id": 3,
+  "iteration": 1568129950857,
+  "links": [],
+  "panels": [
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "InfluxDB-1",
+      "fill": 2,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 10,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "hideTimeOverride": false,
+      "id": 2,
+      "interval": "",
+      "legend": {
+        "alignAsTable": true,
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "sideWidth": 120,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null as zero",
+      "options": {
+        "dataLinks": []
+      },
+      "percentage": false,
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "alias": "$tag_device",
+          "groupBy": [
+            {
+              "params": [
+                "device"
+              ],
+              "type": "tag"
+            }
+          ],
+          "measurement": "logs",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "device",
+              "operator": "=~",
+              "value": "/^$device$/"
+            }
+          ]
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Demo",
+      "tooltip": {
+        "shared": false,
+        "sort": 0,
+        "value_type": "cumulative"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "decimals": 3,
+          "format": "none",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "decimals": 3,
+          "format": "none",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": true,
+        "alignLevel": null
+      }
+    }
+  ],
+  "refresh": false,
+  "schemaVersion": 19,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "allValue": null,
+        "current": {
+          "text": "U1_AN_ENGINE_PCD_2 + U1_AN_ENG_ACCESSORY_GBX_VEL + U1_AN_ENG_BRG_1X_VIB + U1_AN_ENG_BRG_1Y_VIB + U1_AN_ENG_BRG_1_DRN_TEMP + U1_AN_ENG_BRG_2X_VIB + U1_AN_ENG_BRG_2Y_VIB + U1_AN_ENG_BRG_2_3_DRN_TEMP + U1_AN_ENG_BRG_3X_VIB + U1_AN_ENG_BRG_3Y_VIB + U1_AN_ENG_BRG_4X_VIB + U1_AN_ENG_BRG_4Y_VIB + U1_AN_ENG_BRG_4_5_DRN_TEMP + U1_AN_ENG_BRG_5X_VIB + U1_AN_ENG_BRG_5Y_VIB + U1_AN_ENG_GP_AX_DISP + U1_AN_ENG_GP_THR_BRG_TEMP + U1_AN_ENG_PT_AX_DISP",
+          "value": [
+            "U1_AN_ENGINE_PCD_2",
+            "U1_AN_ENG_ACCESSORY_GBX_VEL",
+            "U1_AN_ENG_BRG_1X_VIB",
+            "U1_AN_ENG_BRG_1Y_VIB",
+            "U1_AN_ENG_BRG_1_DRN_TEMP",
+            "U1_AN_ENG_BRG_2X_VIB",
+            "U1_AN_ENG_BRG_2Y_VIB",
+            "U1_AN_ENG_BRG_2_3_DRN_TEMP",
+            "U1_AN_ENG_BRG_3X_VIB",
+            "U1_AN_ENG_BRG_3Y_VIB",
+            "U1_AN_ENG_BRG_4X_VIB",
+            "U1_AN_ENG_BRG_4Y_VIB",
+            "U1_AN_ENG_BRG_4_5_DRN_TEMP",
+            "U1_AN_ENG_BRG_5X_VIB",
+            "U1_AN_ENG_BRG_5Y_VIB",
+            "U1_AN_ENG_GP_AX_DISP",
+            "U1_AN_ENG_GP_THR_BRG_TEMP",
+            "U1_AN_ENG_PT_AX_DISP"
+          ]
+        },
+        "datasource": "InfluxDB-1",
+        "definition": "SHOW TAG VALUES  WITH KEY = \"device\" ",
+        "hide": 0,
+        "includeAll": true,
+        "label": null,
+        "multi": true,
+        "name": "device",
+        "options": [],
+        "query": "SHOW TAG VALUES  WITH KEY = \"device\" ",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      }
+    ]
+  },
+  "time": {
+    "from": "now-2d",
+    "to": "now"
+  },
+  "timepicker": {
+    "hidden": false,
+    "refresh_intervals": [
+      "15m",
+      "30m",
+      "1h",
+      "2h",
+      "1d"
+    ]
+  },
+  "timezone": "",
+  "title": "GTG Lamson Monitoring",
+  "uid": "ZbTWEJOZk",
+  "version": 39
+}
