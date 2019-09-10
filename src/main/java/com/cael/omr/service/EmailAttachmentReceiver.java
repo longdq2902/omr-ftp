@@ -127,15 +127,17 @@ public class EmailAttachmentReceiver {
                     }
                 }
 
-                StringBuilder sb = new StringBuilder();
-                sb.append("\n\tMessage #").append(i++).append(": ")
-                        .append("\n\t From: ").append(from)
-                        .append("\n\t Subject: ").append(subject)
-                        .append("\n\t Sent Date: ").append(sentDate)
-                        .append("\n\t Content: ").append(messageContent)
-                        .append("\n\t Attachments: ").append(attachFiles);
+                if(attachFiles.length() > 0) {
+                    StringBuilder sb = new StringBuilder();
+                    sb.append("\n\tMessage #").append(i++).append(": ")
+                            .append("\n\t From: ").append(from)
+                            .append("\n\t Subject: ").append(subject)
+                            .append("\n\t Sent Date: ").append(sentDate)
+                            .append("\n\t Content: ").append(messageContent)
+                            .append("\n\t Attachments: ").append(attachFiles);
 
-                log.info(sb.toString());
+                    log.info(sb.toString());
+                }
             }
 
             // disconnect
